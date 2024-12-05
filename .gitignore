@@ -1,0 +1,14 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+.vs
+!/machine-learning-algorithms_text-book.pdf
+!/Android_Apps/Google-Playstore.csv
+!/Android_Apps/android-games.csv
+!/.vs/
+/Android_Apps/
