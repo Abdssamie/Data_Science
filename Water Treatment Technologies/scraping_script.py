@@ -13,13 +13,13 @@ title = driver.title
 driver.implicitly_wait(0.5)
 
 search_button = driver.find_element(by=By.CSS_SELECTOR,
-                                    value="#root > div > div > section > section > div.tw-my-4 > button:nth-child(1)")
+                                    value="#root > div > div > section > section > div.tw-my-4 > button")
 search_button.click()
 
 
 try:
     WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, ""))
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "#root > div > div > section > section > section > table"))
     )
     print("Industries specific queries are visible, proceeding...")
 except TimeoutError:
@@ -46,7 +46,7 @@ for i, row in enumerate(rows):
             table_button.click()
 
             WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, ""))
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-id='iwtt-modal-contents']"))
             )
             print("Industries specific query table is visible, proceeding...")
 
@@ -54,8 +54,7 @@ for i, row in enumerate(rows):
             print("Timeout waiting for the industry based table")
 
         except Exception:
-            print(f"Button not found in row {i+1} and cell {column_index}")
-
+            print(f"Button not found in row {i+1} and cell {column_index+1}")
 
         try:
             popup_data = driver.find_element(By.CSS_SELECTOR, "[data-id='iwtt-modal-contents']")
@@ -68,10 +67,20 @@ for i, row in enumerate(rows):
 
                 data.append([cell.text for cell in table_cells])
 
+            print(data)
+
         except Exception:
             print('Something went wrong while scraping the table')
 
+        try:
+            close_modal_button = driver.find_element(By.CSS_SELECTOR,
+                                                     "#root > div > div > section > section > div.tw-absolute.tw-left-0.tw-top-0.tw-z-10.tw-h-full.tw-w-full.tw-bg-black\/65.print\:\!tw-bg-black > div > header > button")
+            close_modal_button.click()
+        except Exception:
+            print("Close button not found")
+
+driver.quit()
 
 df = pd.DataFrame(data)
 
-df.to_csv('out.csv', index=False)
+df.to_csv('scraped_out.csv', index=False)
